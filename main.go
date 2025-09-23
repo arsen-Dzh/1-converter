@@ -7,5 +7,19 @@ func main() {
 	const usdToRub float64 = 83.35
 	const eurToRub = usdToRub / usdToEur
 
-	fmt.Print(eurToRub)
+	fmt.Println(eurToRub)
+	getUserValue()
+}
+
+func getUserValue() string {
+	var userValue string
+
+	fmt.Print("Введите текст: ")
+	fmt.Scan(&userValue)
+
+	return userValue
+}
+
+func fooCount(numFoo, usd, rub float64) float64 {
+	return 1
 }
