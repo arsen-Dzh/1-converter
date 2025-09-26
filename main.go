@@ -11,8 +11,23 @@ const rub = "rub"
 type coursesCurrencyMap = map[string]map[string]float64
 
 func main() {
+	coursesCurrency := coursesCurrencyMap{
+		"rub": {
+			"usd": 0.01,
+			"eur": 0.01,
+		},
+		"usd": {
+			"rub": 83.99,
+			"eur": 0.85,
+		},
+		"eur": {
+			"rub": 98.6,
+			"usd": 1.17,
+		},
+	}
+
 	userCurrency, targetCurrency, userSum := getUserValue()
-	resultSum := sumCount(userCurrency, targetCurrency, userSum)
+	resultSum := sumCount(userCurrency, targetCurrency, userSum, &coursesCurrency)
 	fmt.Print("Вы получите: ", resultSum)
 }
 
@@ -57,26 +72,11 @@ func getUserValue() (string, string, float64) {
 	return userCurrency, targetCurrency, userSum
 }
 
-func sumCount(userCurrency string, targetCurrency string, userSum float64) float64 {
+func sumCount(userCurrency string, targetCurrency string, userSum float64, coursesCurrency *coursesCurrencyMap) float64 {
 	var result float64
 
-	coursesCurrency := coursesCurrencyMap{
-		"rub": {
-			"usd": 0.01,
-			"eur": 0.01,
-		},
-		"usd": {
-			"rub": 83.99,
-			"eur": 0.85,
-		},
-		"eur": {
-			"rub": 98.6,
-			"usd": 1.17,
-		},
-	}
-
 	shouldBreak := false
-	for currency, courses := range coursesCurrency {
+	for currency, courses := range *coursesCurrency {
 		if shouldBreak {
 			break
 		}
