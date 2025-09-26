@@ -8,9 +8,26 @@ const usd = "usd"
 const eur = "eur"
 const rub = "rub"
 
+type coursesCurrencyMap = map[string]map[string]float64
+
 func main() {
+	coursesCurrency := coursesCurrencyMap{
+		"rub": {
+			"usd": 0.01,
+			"eur": 0.01,
+		},
+		"usd": {
+			"rub": 83.99,
+			"eur": 0.85,
+		},
+		"eur": {
+			"rub": 98.6,
+			"usd": 1.17,
+		},
+	}
+
 	userCurrency, targetCurrency, userSum := getUserValue()
-	resultSum := sumCount(userCurrency, targetCurrency, userSum)
+	resultSum := sumCount(userCurrency, targetCurrency, userSum, &coursesCurrency)
 	fmt.Print("Вы получите: ", resultSum)
 }
 
@@ -55,21 +72,24 @@ func getUserValue() (string, string, float64) {
 	return userCurrency, targetCurrency, userSum
 }
 
-func sumCount(userCurrency string, targetCurrency string, userSum float64) float64 {
+func sumCount(userCurrency string, targetCurrency string, userSum float64, coursesCurrency *coursesCurrencyMap) float64 {
 	var result float64
-	switch {
-	case userCurrency == rub && targetCurrency == usd:
-		result = userSum * 0.01
-	case userCurrency == rub && targetCurrency == eur:
-		result = userSum * 0.01
-	case userCurrency == usd && targetCurrency == rub:
-		result = userSum * 83.99
-	case userCurrency == usd && targetCurrency == eur:
-		result = userSum * 0.85
-	case userCurrency == eur && targetCurrency == rub:
-		result = userSum * 98.6
-	case userCurrency == eur && targetCurrency == usd:
-		result = userSum * 1.17
+
+	shouldBreak := false
+	for currency, courses := range *coursesCurrency {
+		if shouldBreak {
+			break
+		}
+
+		if currency == userCurrency {
+			for key, val := range courses {
+				if key == targetCurrency {
+					result = userSum * val
+					shouldBreak = true
+					break
+				}
+			}
+		}
 	}
 
 	return result
